@@ -25,7 +25,7 @@ public class MortgageMapper {
                 .build();
     }
 
-    public MortgageResponseDto fromEntity(MortgageResponse response) {
+    public MortgageResponseDto toDto(MortgageResponse response) {
         return new MortgageResponseDto(response.getPayment().toString());
     }
 }

@@ -39,7 +39,7 @@ public class MortgageController {
         try {
             validator.validate(mortgageRequest);
             MortgageResponse response = mortgageService.calculateMortgagePayment(mapper.fromDto(mortgageRequest));
-            return ResponseEntity.ok().body(mapper.fromEntity(response));
+            return ResponseEntity.ok().body(mapper.toDto(response));
         } catch (ValidationException e) {
             return ResponseEntity.badRequest()
                     .contentType(MediaType.APPLICATION_JSON)
