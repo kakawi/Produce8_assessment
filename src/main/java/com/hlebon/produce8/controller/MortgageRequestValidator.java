@@ -44,8 +44,8 @@ public class MortgageRequestValidator {
         if (amortizationPeriod < 0) {
             throw negativeValueException(AMORTIZATION_PERIOD);
         }
-        if (amortizationPeriod < 5 || amortizationPeriod > 30) {
-            throw new ValidationException(AMORTIZATION_PERIOD + " should be between 5 and 30 years");
+        if (amortizationPeriod < 5 || amortizationPeriod > 30 || amortizationPeriod % 5 != 0) {
+            throw new ValidationException(AMORTIZATION_PERIOD + " should be 5 year increments between 5 and 30 years");
         }
     }
 
@@ -64,7 +64,7 @@ public class MortgageRequestValidator {
         }
         BigDecimal downPaymentPercentage = downPayment.divide(propertyPrice, SCALE, RoundingMode.HALF_EVEN);
         if (MIN_DOWN_PAYMENT_DECIMAL.compareTo(downPaymentPercentage) > 0) {
-            throw new ValidationException("The minimum percentage of down payment is " + MIN_PERCENTAGE_OF_DOWN_PAYMENT);
+            throw new ValidationException("The minimum percentage of down payment is " + MIN_PERCENTAGE_OF_DOWN_PAYMENT + "%");
         }
     }
 

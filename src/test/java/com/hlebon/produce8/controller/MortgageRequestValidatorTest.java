@@ -82,7 +82,7 @@ class MortgageRequestValidatorTest {
                 .build();
 
         // expected
-        String expectedMessage = "The minimum percentage of down payment is 5";
+        String expectedMessage = "The minimum percentage of down payment is 5%";
 
         // when
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> validator.validate(request));
@@ -184,7 +184,7 @@ class MortgageRequestValidatorTest {
                 .build();
 
         // expected
-        String expectedMessage = "Amortization period should be between 5 and 30 years";
+        String expectedMessage = "Amortization period should be 5 year increments between 5 and 30 years";
 
         // when
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> validator.validate(request));
@@ -201,7 +201,7 @@ class MortgageRequestValidatorTest {
                 .build();
 
         // expected
-        String expectedMessage = "Amortization period should be between 5 and 30 years";
+        String expectedMessage = "Amortization period should be 5 year increments between 5 and 30 years";
 
         // when
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> validator.validate(request));
