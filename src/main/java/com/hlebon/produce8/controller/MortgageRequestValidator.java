@@ -5,6 +5,7 @@ import com.hlebon.produce8.service.PaymentScheduleType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Component
 public class MortgageRequestValidator {
@@ -14,10 +15,14 @@ public class MortgageRequestValidator {
     private static final String ANNUAL_INTEREST_RATE = "Annual interest rate";
     private static final String AMORTIZATION_PERIOD = "Amortization period";
     private static final String PAYMENT_SCHEDULE_TYPE = "Payment schedule type";
+    private static final String MIN_PERCENTAGE_OF_DOWN_PAYMENT = "5";
+    private static final BigDecimal ONE_HUNDRED = new BigDecimal(100);
+    private static final int SCALE = 10;
+    private static final BigDecimal MIN_DOWN_PAYMENT_DECIMAL = new BigDecimal(MIN_PERCENTAGE_OF_DOWN_PAYMENT).divide(ONE_HUNDRED, SCALE, RoundingMode.HALF_EVEN);
 
     public void validate(MortgageRequestDto mortgageRequest) {
         validatePropertyPrice(mortgageRequest.getPropertyPrice());
-        validateDownPayment(mortgageRequest.getDownPayment());
+        validateDownPayment(mortgageRequest.getPropertyPrice(), mortgageRequest.getDownPayment());
         validateAnnualInterestRate(mortgageRequest.getAnnualInterestRate());
         validateAmortizationPeriod(mortgageRequest.getAmortizationPeriod());
         validatePaymentScheduleType(mortgageRequest.getPaymentScheduleType());
@@ -53,9 +58,13 @@ public class MortgageRequestValidator {
         }
     }
 
-    private void validateDownPayment(BigDecimal downPayment) {
+    private void validateDownPayment(BigDecimal propertyPrice, BigDecimal downPayment) {
         if (isNegative(downPayment)) {
             throw negativeValueException(DOWN_PAYMENT);
+        }
+        BigDecimal downPaymentPercentage = downPayment.divide(propertyPrice, SCALE, RoundingMode.HALF_EVEN);
+        if (MIN_DOWN_PAYMENT_DECIMAL.compareTo(downPaymentPercentage) > 0) {
+            throw new ValidationException("The minimum percentage of down payment is " + MIN_PERCENTAGE_OF_DOWN_PAYMENT);
         }
     }
 

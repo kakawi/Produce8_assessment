@@ -77,11 +77,12 @@ class MortgageRequestValidatorTest {
     void validate_downPaymentOutOfRange() {
         // given
         MortgageRequestDto request = defaultDto()
-                .downPayment(new BigDecimal("-1"))
+                .propertyPrice(new BigDecimal("100"))
+                .downPayment(new BigDecimal("4"))
                 .build();
 
         // expected
-        String expectedMessage = "Down payment can not be negative";
+        String expectedMessage = "The minimum percentage of down payment is 5";
 
         // when
         ValidationException exception = Assertions.assertThrows(ValidationException.class, () -> validator.validate(request));
